@@ -8,6 +8,10 @@
 
 # 가상환경 설정
 # python -m venv ultra
+# conda create -n .\ultra python=3.9
+# conda activate ultra
+# conda deactivate
+ 
 
 # 파이썬 안통하면 환경변수 설정
 # 윈도우검색창에서 시스템 환경으로 검색
@@ -23,12 +27,12 @@ import os
 import encodings.idna
 
 
-class make_ultra_big
+class make_ultra_big:
   def __init__(self) :
     path = os.path.dirname(os.path.abspath('__file__'))
-    print(path)
+    # print(path)
     self.INPUT_DIR = os.path.join(path, 'input')
-    print(self.INPUT_DIR)
+    # print(self.INPUT_DIR)
 
   def run_ultra_big(self):
     self.readfile()
@@ -36,9 +40,9 @@ class make_ultra_big
   def readfile(self):
     input_filename = os.listdir(self.INPUT_DIR)
     input_filename = [x for x in input_filename if '퀀트' in x][0]
-    print(input_filename)
+    # print(input_filename)
     input_filename_folder = os.path.join(self.INPUT_DIR, input_filename)
-    print(input_filename_folder)
+    # print(input_filename_folder)
     df = pd.read_csv(input_filename_folder, encoding='utf-8')
     print(df.head(1))
 
