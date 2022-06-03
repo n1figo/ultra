@@ -1,0 +1,23 @@
+# 깃허브 업데이트
+# git push origin master
+
+# from google.colab import drive
+# drive.mount('/content/drive')
+
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+
+import os 
+
+# path = '/content/drive/MyDrive/stock_kang/'퀀트데이터(전체)_20211110_052337.csv
+path = '/content/drive/MyDrive/stock_kang/'
+filename = os.listdir(path)[0]
+print(filename)
+path_filename = os.path.join(path,filename)
+df = pd.read_csv(path_filename)
+df.head()
+
+""" 2. 전처리 """
+df_시총필터링 = df.copy()
+df_시총필터링 = df_시총필터링.sort_values(by = '시가총액 (억)', ascending=False) # (2342, 273)
