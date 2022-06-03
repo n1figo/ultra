@@ -35,7 +35,8 @@ class make_ultra_big:
     # print(self.INPUT_DIR)
 
   def run_ultra_big(self):
-    self.readfile()
+    df = self.readfile()
+    self.시총20%필터링(df)
   
   def readfile(self):
     input_filename = os.listdir(self.INPUT_DIR)
@@ -46,6 +47,12 @@ class make_ultra_big:
     df = pd.read_csv(input_filename_folder, encoding='utf-8')
     print(df.head(1))
 
+    return df
+
+  def 시총20%_필터링(self, df):
+    
+    pass
+
 
 if __name__ == "__main__":
   ultra_big = make_ultra_big()
@@ -53,13 +60,6 @@ if __name__ == "__main__":
 
 
 
-# # path = '/content/drive/MyDrive/stock_kang/'퀀트데이터(전체)_20211110_052337.csv
-# path = '/content/drive/MyDrive/stock_kang/'
-# filename = os.listdir(path)[0]
-# print(filename)
-# path_filename = os.path.join(path,filename)
-# df = pd.read_csv(path_filename)
-# df.head()
 
 # """ 2. 전처리 """
 # ## 2.1. 시총 20% 필터링
