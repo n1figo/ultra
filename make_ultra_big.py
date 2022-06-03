@@ -9,6 +9,13 @@
 # 가상환경 설정
 # python -m venv ultra
 
+# 파이썬 안통하면 환경변수 설정
+# 윈도우검색창에서 시스템 환경으로 검색
+# 현재 작업폴더를 환경변수에 추가하면 됨
+
+#  가상환경 실행
+# source ./venv/Scripts/activate
+
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
@@ -16,24 +23,29 @@ import os
 import encodings.idna
 
 
-class make_ultra_big:
+class make_ultra_big
   def __init__(self) :
     path = os.path.dirname(os.path.abspath('__file__'))
     print(path)
     self.INPUT_DIR = os.path.join(path, 'input')
+    print(self.INPUT_DIR)
 
   def run_ultra_big(self):
-    pass
+    self.readfile()
   
-  def readfile(self, df):
+  def readfile(self):
     input_filename = os.listdir(self.INPUT_DIR)
-    input_filename = [x for x in input_filename if '퀀트' in x]
-    df = pd.read_csv(input_filename, encoding='cp949')
+    input_filename = [x for x in input_filename if '퀀트' in x][0]
+    print(input_filename)
+    input_filename_folder = os.path.join(self.INPUT_DIR, input_filename)
+    print(input_filename_folder)
+    df = pd.read_csv(input_filename_folder, encoding='utf-8')
     print(df.head(1))
 
 
 if __name__ == "__main__":
   ultra_big = make_ultra_big()
+  ultra_big.run_ultra_big()
 
 
 
@@ -179,79 +191,79 @@ if __name__ == "__main__":
 #   for col in selected_cols_yoy_qoq_current_before_adjusted:
 #     print(col)
     
-    col_rank = str(col) + '_순위'
-    df2[col_rank] = df2[col].rank(ascending=False)
-    selected_col_rank.append(col_rank)
+#     col_rank = str(col) + '_순위'
+#     df2[col_rank] = df2[col].rank(ascending=False)
+#     selected_col_rank.append(col_rank)
 
-  """순위를 평균"""
-  df2['이익모멘텀_종합순위'] = df2[selected_col_rank].mean(axis=1)
+#   """순위를 평균"""
+#   df2['이익모멘텀_종합순위'] = df2[selected_col_rank].mean(axis=1)
 
-  # df2['이익모멘텀_종합순위'] = 
-  return df2
+#   # df2['이익모멘텀_종합순위'] = 
+#   return df2
   
 
 
-df_시총필터링_상위이십퍼센트_지주사제외_밸류순위_이익모멘텀 = make_earnings_momentum(df_시총필터링_상위이십퍼센트_지주사제외_밸류순위, selected_cols_yoy_qoq_current_before_adjusted)
-df_시총필터링_상위이십퍼센트_지주사제외_밸류순위_이익모멘텀.head(3)
+# df_시총필터링_상위이십퍼센트_지주사제외_밸류순위_이익모멘텀 = make_earnings_momentum(df_시총필터링_상위이십퍼센트_지주사제외_밸류순위, selected_cols_yoy_qoq_current_before_adjusted)
+# df_시총필터링_상위이십퍼센트_지주사제외_밸류순위_이익모멘텀.head(3)
 
 
-df_시총필터링_상위이십퍼센트_지주사제외_밸류순위_이익모멘텀.to_csv('/content/drive/MyDrive/stock_kang/output/kang_sample.csv', encoding='cp949')
+# df_시총필터링_상위이십퍼센트_지주사제외_밸류순위_이익모멘텀.to_csv('/content/drive/MyDrive/stock_kang/output/kang_sample.csv', encoding='cp949')
 
-"""5. 퀄리티 종합순위 산출"""
-[x for x in df_시총필터링_상위이십퍼센트_지주사제외_밸류순위_이익모멘텀.columns if '자산' in x]
-def 퀄리티_종합순위_산출(df):
-  df2 = df.copy()
-  """퀄리티 종합순위 산출"""
+# """5. 퀄리티 종합순위 산출"""
+# [x for x in df_시총필터링_상위이십퍼센트_지주사제외_밸류순위_이익모멘텀.columns if '자산' in x]
+# def 퀄리티_종합순위_산출(df):
+#   df2 = df.copy()
+#   """퀄리티 종합순위 산출"""
   
-  # GPA (내림차순)
-  df2['과거GP/A_rank'] = df2['과거 GP/A (%)'].rank(ascending=False) 
+#   # GPA (내림차순)
+#   df2['과거GP/A_rank'] = df2['과거 GP/A (%)'].rank(ascending=False) 
 
-  # 자산성장률(오름차순)
-  df2['자산증가율 (최근분기)_rank'] = df2['자산증가율 (최근분기)'].rank(ascending=True) 
+#   # 자산성장률(오름차순)
+#   df2['자산증가율 (최근분기)_rank'] = df2['자산증가율 (최근분기)'].rank(ascending=True) 
 
-  # 영업이익/차입금 증가율(내림차순)
-  df2['(영업이익/차입금) 증가율_rank'] = df2['(영업이익/차입금) 증가율'].rank(ascending=False)
+#   # 영업이익/차입금 증가율(내림차순)
+#   df2['(영업이익/차입금) 증가율_rank'] = df2['(영업이익/차입금) 증가율'].rank(ascending=False)
 
-  selected_cols = ['과거GP/A_rank','자산증가율 (최근분기)_rank','(영업이익/차입금) 증가율_rank']
+#   selected_cols = ['과거GP/A_rank','자산증가율 (최근분기)_rank','(영업이익/차입금) 증가율_rank']
   
-  # 퀄리티 종합순위 산출
-  df2['퀄리티_종합순위'] = df2[selected_cols].mean(axis=1)
+#   # 퀄리티 종합순위 산출
+#   df2['퀄리티_종합순위'] = df2[selected_cols].mean(axis=1)
 
-  return df2
+#   return df2
 
-df_시총필터링_상위이십퍼센트_지주사제외_밸류순위_이익모멘텀_퀄리티순위 = 퀄리티_종합순위_산출(df_시총필터링_상위이십퍼센트_지주사제외_밸류순위_이익모멘텀)
-df_시총필터링_상위이십퍼센트_지주사제외_밸류순위_이익모멘텀_퀄리티순위.head()
+# df_시총필터링_상위이십퍼센트_지주사제외_밸류순위_이익모멘텀_퀄리티순위 = 퀄리티_종합순위_산출(df_시총필터링_상위이십퍼센트_지주사제외_밸류순위_이익모멘텀)
+# df_시총필터링_상위이십퍼센트_지주사제외_밸류순위_이익모멘텀_퀄리티순위.head()
 
 
 
-"""6. 대형주 울트라"""
-def 울트라최종순위산출(df):
-  df2 = df.copy()
+# """6. 대형주 울트라"""
+# def 울트라최종순위산출(df):
+#   df2 = df.copy()
 
-  selected_cols = ['밸류종합순위','이익모멘텀_종합순위','퀄리티_종합순위']
+#   selected_cols = ['밸류종합순위','이익모멘텀_종합순위','퀄리티_종합순위']
 
-  # 울트라 종합순위 산출
-  df2['울트라_종합순위'] = df2[selected_cols].mean(axis=1)
+#   # 울트라 종합순위 산출
+#   df2['울트라_종합순위'] = df2[selected_cols].mean(axis=1)
   
-  # 정렬
-  df2 = df2.sort_values(by='울트라_종합순위', ascending=True)
+#   # 정렬
+#   df2 = df2.sort_values(by='울트라_종합순위', ascending=True)
 
-  return df2
+#   return df2
 
-df_시총필터링_상위이십퍼센트_지주사제외_밸류순위_이익모멘텀_퀄리티순위_울트라최종순위 = 울트라최종순위산출(df_시총필터링_상위이십퍼센트_지주사제외_밸류순위_이익모멘텀_퀄리티순위)
-df_시총필터링_상위이십퍼센트_지주사제외_밸류순위_이익모멘텀_퀄리티순위_울트라최종순위.head(20)
+# df_시총필터링_상위이십퍼센트_지주사제외_밸류순위_이익모멘텀_퀄리티순위_울트라최종순위 = 울트라최종순위산출(df_시총필터링_상위이십퍼센트_지주사제외_밸류순위_이익모멘텀_퀄리티순위)
+# df_시총필터링_상위이십퍼센트_지주사제외_밸류순위_이익모멘텀_퀄리티순위_울트라최종순위.head(20)
 
 
-"""
-7. 울트라 소형주
-3. 밸류모멘텀 산출
-4. 퀄리티모멘텀
-5. 밸류퀄리티
-8. 울트라
-다음과제 : kisve 산출
-코스피배당수익률, 5년국채금리, 코스피 PER역수 비교 + 머신러닝 + 문병로 메트릭스튜디오 참고
-[ ]
-1
-강화학습 1달, 3개월, 6개월 예측
-미국주식 미래에셋크롤링 + 최일 CFA 밸류에이션
-"""
+# """
+# 7. 울트라 소형주
+# 3. 밸류모멘텀 산출
+# 4. 퀄리티모멘텀
+# 5. 밸류퀄리티
+# 8. 울트라
+# 다음과제 : kisve 산출
+# 코스피배당수익률, 5년국채금리, 코스피 PER역수 비교 + 머신러닝 + 문병로 메트릭스튜디오 참고
+# [ ]
+# 1
+# 강화학습 1달, 3개월, 6개월 예측
+# 미국주식 미래에셋크롤링 + 최일 CFA 밸류에이션
+# """
