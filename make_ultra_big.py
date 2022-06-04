@@ -36,7 +36,7 @@ class make_ultra_big:
 
   def run_ultra_big(self):
     df = self.readfile()
-    self.시총20%필터링(df)
+    self.시총20프로필터링(df)
   
   def readfile(self):
     input_filename = os.listdir(self.INPUT_DIR)
@@ -49,7 +49,7 @@ class make_ultra_big:
 
     return df
 
-  def 시총20%_필터링(self, df):
+  def 시총20프로필터링(self, df):
     
     pass
 
