@@ -20,6 +20,7 @@
 #  가상환경 실행
 # source ./venv/Scripts/activate
 
+from fileinput import filename
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
@@ -32,11 +33,14 @@ class make_ultra_big:
     path = os.path.dirname(os.path.abspath('__file__'))
     # print(path)
     self.INPUT_DIR = os.path.join(path, 'input')
+    self.OUTPUT_DIR = os.path.join(path, 'output')
     # print(self.INPUT_DIR)
 
   def run_ultra_big(self):
     df = self.readfile()
-    self.시총20프로필터링(df)
+    df = self.시총20프로필터링(df)
+    filename_output = os.path.join(self.OUTPUT_DIR, 'tmp.csv')
+    df.to_csv(filename_output)
   
   def readfile(self):
     input_filename = os.listdir(self.INPUT_DIR)
@@ -50,8 +54,16 @@ class make_ultra_big:
     return df
 
   def 시총20프로필터링(self, df):
-    
-    pass
+    df_시총필터링 = df.copy()
+    df_시총필터링 = df_시총필터링.sort_values(by = '시가총액 (억)', ascending=False) 
+    시총상위이십행 = int(df_시총필터링.shape[0]*0.2)
+    시총상위이십행    
+    df_시총필터링_상위이십퍼센트 = df_시총필터링.copy()
+    df_시총필터링_상위이십퍼센트 = df_시총필터링_상위이십퍼센트.iloc[0:시총상위이십행, :]
+    print(df_시총필터링.shape) # (2342, 273)
+    df_시총필터링_상위이십퍼센트.shape # (468, 273)
+
+    return df_시총필터링_상위이십퍼센트
 
 
 if __name__ == "__main__":
@@ -62,18 +74,12 @@ if __name__ == "__main__":
 
 
 # """ 2. 전처리 """
-# ## 2.1. 시총 20% 필터링
-# df_시총필터링 = df.copy()
-# df_시총필터링 = df_시총필터링.sort_values(by = '시가총액 (억)', ascending=False) # (2342, 273)
+
 
 # # 상위 20%
-# 시총상위이십행 = int(df_시총필터링.shape[0]*0.2)
-# 시총상위이십행
 
-# df_시총필터링_상위이십퍼센트 = df_시총필터링.copy()
-# df_시총필터링_상위이십퍼센트 = df_시총필터링_상위이십퍼센트.iloc[0:시총상위이십행, :]
-# print(df_시총필터링.shape) # (2342, 273)
-# df_시총필터링_상위이십퍼센트.shape # (468, 273)
+
+
 
 # df_시총필터링_상위이십퍼센트.tail()
 
