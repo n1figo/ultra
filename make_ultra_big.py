@@ -63,7 +63,7 @@ class make_ultra_big:
     input_filename_folder = os.path.join(self.INPUT_DIR, input_filename)
     # print(input_filename_folder)
     df = pd.read_csv(input_filename_folder, encoding='utf-8')
-    print(df.head(1))
+    # print(df.head(1))
 
     return df
 
@@ -74,8 +74,8 @@ class make_ultra_big:
     시총상위이십행    
     df_시총필터링_상위이십퍼센트 = df_시총필터링.copy()
     df_시총필터링_상위이십퍼센트 = df_시총필터링_상위이십퍼센트.iloc[0:시총상위이십행, :]
-    print(df_시총필터링.shape) # (2342, 273)
-    print(df_시총필터링_상위이십퍼센트.shape) # (474, 273)
+    # print(df_시총필터링.shape) # (2342, 273)
+    # print(df_시총필터링_상위이십퍼센트.shape) # (474, 273)
 
     return df_시총필터링_상위이십퍼센트
 
@@ -86,14 +86,14 @@ class make_ultra_big:
     df_시총필터링_상위이십퍼센트_지주사제외
     # 지주사 아닌 것들만 필터링
     df_시총필터링_상위이십퍼센트_지주사제외 = df_시총필터링_상위이십퍼센트_지주사제외.loc[df_시총필터링_상위이십퍼센트_지주사제외['업종 (대)'] != '지주사', :]
-    print(df.shape)
-    print(df_시총필터링_상위이십퍼센트_지주사제외.shape) # (436, 273)
-    print(df_시총필터링_상위이십퍼센트_지주사제외['업종 (대)'].value_counts())
+    # print(df.shape)
+    # print(df_시총필터링_상위이십퍼센트_지주사제외.shape) # (436, 273)
+    # print(df_시총필터링_상위이십퍼센트_지주사제외['업종 (대)'].value_counts())
 
     # 금융업종 제외
     df_시총필터링_상위이십퍼센트_지주사금융사제외 = df_시총필터링_상위이십퍼센트_지주사제외.loc[df_시총필터링_상위이십퍼센트_지주사제외['업종 (대)'] != '금융', :]
-    print(df_시총필터링_상위이십퍼센트_지주사금융사제외.shape) # (409, 273)
-    print(df_시총필터링_상위이십퍼센트_지주사금융사제외['업종 (대)'].value_counts())
+    # print(df_시총필터링_상위이십퍼센트_지주사금융사제외.shape) # (409, 273)
+    # print(df_시총필터링_상위이십퍼센트_지주사금융사제외['업종 (대)'].value_counts())
 
     return df_시총필터링_상위이십퍼센트_지주사금융사제외
 
