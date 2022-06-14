@@ -31,6 +31,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import os 
 import encodings.idna
+import this_quarter
 
 
 class make_ultra_big:
@@ -137,70 +138,17 @@ class make_ultra_big:
     df2[new_col_순위] = df2[new_col_역수].rank(ascending=False) # 역수 수익률 큰 순서대로 내림차순 정렬
     return df2
 
+  
+  # """4. 이익모멘텀 종합순위 산출"""
+  # ### 전분기 대비 영업이익 증가율, 전년 동기 대비 영업이익 증가율, 전 분기 대비 순이익 증가율, 전년 동기 대비 순이익 증가율
+  # """이번달이 몇분기인지 구하기"""
+
 
 if __name__ == "__main__":
   ultra_big = make_ultra_big()
   ultra_big.run_ultra_big()
 
 
-
-# """4. 이익모멘텀 종합순위 산출"""
-# ### 전분기 대비 영업이익 증가율, 전년 동기 대비 영업이익 증가율, 전 분기 대비 순이익 증가율, 전년 동기 대비 순이익 증가율
-# """이번달이 몇분기인지 구하기"""
-
-# import math
-# import time
-
-
-# # 현재 월 반환 함수
-# def currentMonth():
-#   now = time.localtime()
-#   return now.tm_mon # 현재 월만 반환
-
-# #############################################
-# ## 이번 달이 몇 분기인지 구하기
-# #
-# # year = math.ceil(currentYear())
-# quarter = math.ceil( currentMonth() / 3.0 )
-# print(quarter)
-
-
-# # importing date class from datetime module
-# from datetime import date
-
-# def confirm_current_year_quarter():
-#   """이익모멘텀 대상되는 현재분기값 산출"""
-#   # creating the date object of today's date
-#   todays_date = date.today()
-    
-#   # printing todays date
-#   # print("Current date: ", todays_date)
-    
-#   # fetching the current year, month and day of today
-#   print("Current year:", todays_date.year)
-#   # print("Current month:", todays_date.month)
-#   # print("Current day:", todays_date.day)
-
-#   조회대상분기 = quarter - 1
-#   print(조회대상분기)
-
-#   """이전분기까지 yoy qoq 산출"""
-#   selected_cols = [cols for cols in df_시총필터링_상위이십퍼센트_지주사제외_밸류순위.columns.tolist() if ('영업이익' in cols) or ('순이익' in cols)]
-#   selected_cols_yoy_qoq = [cols for cols in selected_cols if ('YOY' in cols) or ('QOQ' in cols)]
-#   current_year_quarter = str(int(todays_date.year))[2:] + '년' + str(조회대상분기) + 'Q'
-#   print('현재연도및분기: ', current_year_quarter)  # 현재연도및분기:  21년3Q
-#   selected_cols_yoy_qoq_current_before = [cols for cols in selected_cols_yoy_qoq if current_year_quarter in cols]
-#   if '(E)' in selected_cols_yoy_qoq_current_before[0] :
-#     selected_cols_yoy_qoq_current_before = str(int(todays_date.year))[2:] + '년' + str(조회대상분기-1) + 'Q'
-#   print('확정현재연도및분기: ', selected_cols_yoy_qoq_current_before) # 확정현재연도및분기:  21년2Q
-
-#   """조정된 분기로 yoy qoq 산출"""
-#   selected_cols_yoy_qoq_current_before_adjusted = [cols for cols in selected_cols_yoy_qoq if selected_cols_yoy_qoq_current_before in cols]
-#   print('조정분기데이터:' , selected_cols_yoy_qoq_current_before_adjusted)
-  
-#   return selected_cols_yoy_qoq_current_before_adjusted
-
-# selected_cols_yoy_qoq_current_before_adjusted = confirm_current_year_quarter()
 
 
 # """랭크산출 : 내림차순 + 순위산출"""
