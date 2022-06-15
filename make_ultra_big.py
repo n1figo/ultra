@@ -23,6 +23,11 @@
 #  가상환경 실행
 # source ./venv/Scripts/activate
 
+# 클래스 가져오기 참고
+# https://m.blog.naver.com/PostView.naver?isHttpsRedirect=true&blogId=monkey5255&logNo=220615974167
+
+
+
 # from builtins import EncodingWarning
 from fileinput import filename
 # from typing_extensions import Self
@@ -56,6 +61,12 @@ class make_ultra_big:
     # df = df.set_index()
     filename_output = os.path.join(self.OUTPUT_DIR, 'tmp.csv')
     df.to_csv(filename_output, encoding='cp949')
+
+    # """이번달이 몇분기인지 구하기"""
+    q = this_quarter.make_this_quarter_num()
+    this_y,this_q = q.make_this_q_num()
+    print(this_y,this_q)
+
   
   def readfile(self):
     input_filename = os.listdir(self.INPUT_DIR)
@@ -141,7 +152,23 @@ class make_ultra_big:
   
   # """4. 이익모멘텀 종합순위 산출"""
   # ### 전분기 대비 영업이익 증가율, 전년 동기 대비 영업이익 증가율, 전 분기 대비 순이익 증가율, 전년 동기 대비 순이익 증가율
-  # """이번달이 몇분기인지 구하기"""
+  # """이전분기까지 yoy qoq 산출"""
+        # ---> make.py로 옮기기
+        # selected_cols = [cols for cols in df_시총필터링_상위이십퍼센트_지주사제외_밸류순위.columns.tolist() if ('영업이익' in cols) or ('순이익' in cols)]
+        # selected_cols_yoy_qoq = [cols for cols in selected_cols if ('YOY' in cols) or ('QOQ' in cols)]
+        # current_year_quarter = str(int(todays_date.year))[2:] + '년' + str(조회대상분기) + 'Q'
+        # print('현재연도및분기: ', current_year_quarter)  # 현재연도및분기:  21년3Q
+        # selected_cols_yoy_qoq_current_before = [cols for cols in selected_cols_yoy_qoq if current_year_quarter in cols]
+        # if '(E)' in selected_cols_yoy_qoq_current_before[0] :
+        #     selected_cols_yoy_qoq_current_before = str(int(todays_date.year))[2:] + '년' + str(조회대상분기-1) + 'Q'
+        # print('확정현재연도및분기: ', selected_cols_yoy_qoq_current_before) # 확정현재연도및분기:  21년2Q
+
+        # """조정된 분기로 yoy qoq 산출"""
+        # selected_cols_yoy_qoq_current_before_adjusted = [cols for cols in selected_cols_yoy_qoq if selected_cols_yoy_qoq_current_before in cols]
+        # print('조정분기데이터:' , selected_cols_yoy_qoq_current_before_adjusted)
+        
+        # return selected_cols_yoy_qoq_current_before_adjusted
+  
 
 
 if __name__ == "__main__":
