@@ -47,25 +47,32 @@ class make_ultra_big:
     self.OUTPUT_DIR = os.path.join(path, 'output')
     # print(self.INPUT_DIR)
 
+
   def run_ultra_big(self):
+    ###################################
     """0-1. 실행함수(대형주울트라)"""
+    ###################################
     df = self.readfile()
     df_시총20프로 = self.시총20프로필터링(df)
     df_지주스펙제외 = self.지주사스펙금융사제외(df_시총20프로)
 
     """1. 밸류종합순위"""
-    df = self.밸류종합순위(df_지주스펙제외)
-    df.reset_index(inplace=True, drop=True)
+    df_밸류종합순위 = self.밸류종합순위(df_지주스펙제외)
+    df_밸류종합순위.reset_index(inplace=True, drop=True)
 
     """2. 이익모멘텀종합순위"""
-    # df = df.set_index()
-    filename_output = os.path.join(self.OUTPUT_DIR, 'tmp.csv')
-    df.to_csv(filename_output, encoding='cp949')
+    
 
     # """이번달이 몇분기인지 구하기"""
     q = this_quarter.make_this_quarter_num()
     this_y,this_q = q.make_this_q_num()
     print(this_y,this_q)
+
+    selected_cols_yoy_qoq_current_before_adjusted = self.confirm_this_q_y(df_밸류종합순위, this_y,this_q)
+
+    # df = df.set_index()
+    filename_output = os.path.join(self.OUTPUT_DIR, 'tmp.csv')
+    df.to_csv(filename_output, encoding='cp949')
 
   
   def readfile(self):
@@ -153,21 +160,27 @@ class make_ultra_big:
   # """4. 이익모멘텀 종합순위 산출"""
   # ### 전분기 대비 영업이익 증가율, 전년 동기 대비 영업이익 증가율, 전 분기 대비 순이익 증가율, 전년 동기 대비 순이익 증가율
   # """이전분기까지 yoy qoq 산출"""
-        # ---> make.py로 옮기기
-        # selected_cols = [cols for cols in df_시총필터링_상위이십퍼센트_지주사제외_밸류순위.columns.tolist() if ('영업이익' in cols) or ('순이익' in cols)]
-        # selected_cols_yoy_qoq = [cols for cols in selected_cols if ('YOY' in cols) or ('QOQ' in cols)]
-        # current_year_quarter = str(int(todays_date.year))[2:] + '년' + str(조회대상분기) + 'Q'
-        # print('현재연도및분기: ', current_year_quarter)  # 현재연도및분기:  21년3Q
-        # selected_cols_yoy_qoq_current_before = [cols for cols in selected_cols_yoy_qoq if current_year_quarter in cols]
-        # if '(E)' in selected_cols_yoy_qoq_current_before[0] :
-        #     selected_cols_yoy_qoq_current_before = str(int(todays_date.year))[2:] + '년' + str(조회대상분기-1) + 'Q'
-        # print('확정현재연도및분기: ', selected_cols_yoy_qoq_current_before) # 확정현재연도및분기:  21년2Q
+  def confirm_this_q_y(self, df, this_y,this_q):
+    df2 = df.copy()
+    selected_cols = [cols for cols in df2.columns.tolist() if ('영업이익' in cols) or ('순이익' in cols)]
+    selected_cols_yoy_qoq = [cols for cols in selected_cols if ('YOY' in cols) or ('QOQ' in cols)]
+    print(selected_cols_yoy_qoq)
+    current_year_quarter = str(int(this_y))[2:] + '년' + str(this_q) + 'Q'
+    print('현재연도및분기: ', current_year_quarter)  # 현재연도및분기:  22년2Q
+    selected_cols_yoy_qoq_current_before = [cols for cols in selected_cols_yoy_qoq if current_year_quarter in cols]
+    print(selected_cols_yoy_qoq_current_before)
+    if '(E)' in selected_cols_yoy_qoq_current_before[0] :
+        selected_cols_yoy_qoq_current_before = str(int(this_y))[2:] + '년' + str(this_q-1) + 'Q'
+    print('확정현재연도및분기: ', selected_cols_yoy_qoq_current_before) # 확정현재연도및분기:  21년2Q
 
-        # """조정된 분기로 yoy qoq 산출"""
-        # selected_cols_yoy_qoq_current_before_adjusted = [cols for cols in selected_cols_yoy_qoq if selected_cols_yoy_qoq_current_before in cols]
-        # print('조정분기데이터:' , selected_cols_yoy_qoq_current_before_adjusted)
+    """조정된 분기로 yoy qoq 산출"""
+    selected_cols_yoy_qoq_current_before_adjusted = [cols for cols in selected_cols_yoy_qoq if selected_cols_yoy_qoq_current_before in cols]
+    print('조정분기데이터:' , selected_cols_yoy_qoq_current_before_adjusted)
+    
+    return selected_cols_yoy_qoq_current_before_adjusted
+    
+    pass
         
-        # return selected_cols_yoy_qoq_current_before_adjusted
   
 
 

@@ -40,9 +40,8 @@ class make_this_quarter_num:
         # print("Current month:", todays_date.month)
         # print("Current day:", todays_date.day)
 
-        조회대상분기 = quarter - 1
-        recent_quarter = 조회대상분기
-        print('조회대상분기는', 조회대상분기, '입니다.')
+        recent_quarter = quarter
+        print('조회대상분기는', recent_quarter, '입니다.')
 
         return this_year, recent_quarter
 
