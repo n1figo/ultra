@@ -167,15 +167,30 @@ class make_ultra_big:
     print(selected_cols_yoy_qoq)
     current_year_quarter = str(int(this_y))[2:] + '년' + str(this_q) + 'Q'
     print('현재연도및분기: ', current_year_quarter)  # 현재연도및분기:  22년2Q
-    selected_cols_yoy_qoq_current_before = [cols for cols in selected_cols_yoy_qoq if current_year_quarter in cols]
-    print(selected_cols_yoy_qoq_current_before)
+
+    # 분석대상연도 및 분기
+    analysis_q = this_q - 1
+    # 분석대상분기가 0이면 전년도 4Q 로 환산
+    if analysis_q == 0:
+      analysis_y = this_y - 1 
+      analysis_q = 4
+
+    else:
+      # 분석대상분기가 0이 아닐 경우 : 1분기만 뺀다.
+      analysis_y = this_y 
+
+    # 분석대상 분기 및 연도 확정
+    analysis_year_quarter = str(int(analysis_y))[2:] + '년' + str(analysis_q) + 'Q'
+
+    selected_cols_yoy_qoq_current_before = [cols for cols in selected_cols_yoy_qoq if analysis_year_quarter in cols]
+    print(selected_cols_yoy_qoq_current_before) # 값 없음
     if '(E)' in selected_cols_yoy_qoq_current_before[0] :
         selected_cols_yoy_qoq_current_before = str(int(this_y))[2:] + '년' + str(this_q-1) + 'Q'
-    print('확정현재연도및분기: ', selected_cols_yoy_qoq_current_before) # 확정현재연도및분기:  21년2Q
+    print('분석대상 연도및분기: ', selected_cols_yoy_qoq_current_before) # 확정현재연도및분기:  22년2Q
 
     """조정된 분기로 yoy qoq 산출"""
     selected_cols_yoy_qoq_current_before_adjusted = [cols for cols in selected_cols_yoy_qoq if selected_cols_yoy_qoq_current_before in cols]
-    print('조정분기데이터:' , selected_cols_yoy_qoq_current_before_adjusted)
+    print('분석대상 분기데이터:' , selected_cols_yoy_qoq_current_before_adjusted)
     
     return selected_cols_yoy_qoq_current_before_adjusted
     
