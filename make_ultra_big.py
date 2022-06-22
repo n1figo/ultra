@@ -68,18 +68,28 @@ class make_ultra_big:
     df_밸류종합순위.reset_index(inplace=True, drop=True)
 
     """2. 이익모멘텀종합순위"""
-    
-
     # """이번달이 몇분기인지 구하기"""
     q = this_quarter.make_this_quarter_num()
     this_y,this_q = q.make_this_q_num()
     print(this_y,this_q)
 
-    selected_cols_yoy_qoq_current_before_adjusted = self.confirm_this_q_y(df_밸류종합순위, this_y,this_q)
+    selected_cols_yoy_qoq_current_before_adjusted = self.confirm_this_q_y(df_밸류종합순위, this_y, this_q)
+    print(selected_cols_yoy_qoq_current_before_adjusted) # 분석대상 분기/연
+
+    ### 이익모멘텀 종합순위산출
+    df_밸류_이익모멘텀 = self.make_earnings_momentum(df_밸류종합순위, selected_cols_yoy_qoq_current_before_adjusted)
+
+    """3. 퀄리티순위"""
+    df_밸류_이익모멘텀_퀄리티 = self.퀄리티_종합순위_산출(df_밸류_이익모멘텀)
 
     # df = df.set_index()
     filename_output = os.path.join(self.OUTPUT_DIR, 'tmp.csv')
-    df.to_csv(filename_output, encoding='cp949')
+    df_밸류_이익모멘텀_퀄리티.to_csv(filename_output, encoding='cp949')
+
+    """4. 밸류 + 이익모멘텀 종합순위산출"""
+    """5. 대형주 울트라"""
+    """6. 울트라"""
+
 
   
   def readfile(self):
@@ -164,9 +174,9 @@ class make_ultra_big:
     return df2
 
   
-  # """4. 이익모멘텀 종합순위 산출"""
-  # ### 전분기 대비 영업이익 증가율, 전년 동기 대비 영업이익 증가율, 전 분기 대비 순이익 증가율, 전년 동기 대비 순이익 증가율
-  # """이전분기까지 yoy qoq 산출"""
+  """4. 이익모멘텀 종합순위 산출"""
+  ### 전분기 대비 영업이익 증가율, 전년 동기 대비 영업이익 증가율, 전 분기 대비 순이익 증가율, 전년 동기 대비 순이익 증가율
+  ### 이전분기까지 yoy qoq 산출
   def confirm_this_q_y(self, df, this_y,this_q):
     df2 = df.copy()
     selected_cols = [cols for cols in df2.columns.tolist() if ('영업이익' in cols) or ('순이익' in cols)]
@@ -197,13 +207,53 @@ class make_ultra_big:
 
     """조정된 분기로 yoy qoq 산출"""
     selected_cols_yoy_qoq_current_before_adjusted = [cols for cols in selected_cols_yoy_qoq if selected_cols_yoy_qoq_current_before in cols]
-    print('분석대상 분기데이터:' , selected_cols_yoy_qoq_current_before_adjusted)
+    print('분석대상 분기데이터:' , selected_cols_yoy_qoq_current_before_adjusted) # ['영업이익 22년1Q(E) YOY', '영업이익 22년1Q(E) QOQ', '순이익 22년1Q(E) YOY', '순이익 22년1Q(E) QOQ']
     
     return selected_cols_yoy_qoq_current_before_adjusted
-    
-    pass
-        
+
   
+  """4. 이익모멘텀 종합순위 산출"""
+  ### 이익모멘텀 종합순위
+  def make_earnings_momentum(self, df, selected_cols_yoy_qoq_current_before_adjusted):
+    df2 = df.copy()
+    selected_col_rank = []
+    """내림차순으로 순위부여"""
+    for col in selected_cols_yoy_qoq_current_before_adjusted:
+      # print(col)
+      col_rank = str(col) + '_순위'
+      df2[col_rank] = df2[col].rank(ascending=False) # 내림차순 정렬 후 1위부터 순위매기기
+      selected_col_rank.append(col_rank) # 순위 리스트 저장
+      print(selected_col_rank)
+
+    """순위를 평균"""
+    df2['이익모멘텀_종합순위'] = df2[selected_col_rank].mean(axis=1)
+    df2 = df2.sort_values(by = '이익모멘텀_종합순위', ascending=True)
+    df2.reset_index(inplace=True, drop=True)
+
+    return df2
+
+  
+  """5. 퀄리티 종합순위 산출"""
+  def 퀄리티_종합순위_산출(self, df):
+    df2 = df.copy()
+    """퀄리티 종합순위 산출"""
+    
+    # GPA (내림차순)
+    df2['과거GP/A_rank'] = df2['과거 GP/A (%)'].rank(ascending=False) 
+
+    # 자산성장률(오름차순)
+    df2['자산증가율 (최근분기)_rank'] = df2['자산증가율 (최근분기)'].rank(ascending=True) 
+
+    # 영업이익/차입금 증가율(내림차순)
+    df2['(영업이익/차입금) 증가율_rank'] = df2['(영업이익/차입금) 증가율'].rank(ascending=False)
+
+    selected_cols = ['과거GP/A_rank','자산증가율 (최근분기)_rank','(영업이익/차입금) 증가율_rank']
+    
+    # 퀄리티 종합순위 산출
+    df2['퀄리티_종합순위'] = df2[selected_cols].mean(axis=1)
+
+    return df2
+    
 
 
 if __name__ == "__main__":
@@ -212,58 +262,6 @@ if __name__ == "__main__":
 
 
 
-
-# """랭크산출 : 내림차순 + 순위산출"""
-
-# def make_earnings_momentum(df, selected_cols_yoy_qoq_current_before_adjusted):
-#   df2 = df.copy()
-#   selected_col_rank = []
-#   """내림차순으로 순위부여"""
-#   for col in selected_cols_yoy_qoq_current_before_adjusted:
-#     print(col)
-    
-#     col_rank = str(col) + '_순위'
-#     df2[col_rank] = df2[col].rank(ascending=False)
-#     selected_col_rank.append(col_rank)
-
-#   """순위를 평균"""
-#   df2['이익모멘텀_종합순위'] = df2[selected_col_rank].mean(axis=1)
-
-#   # df2['이익모멘텀_종합순위'] = 
-#   return df2
-  
-
-
-# df_시총필터링_상위이십퍼센트_지주사제외_밸류순위_이익모멘텀 = make_earnings_momentum(df_시총필터링_상위이십퍼센트_지주사제외_밸류순위, selected_cols_yoy_qoq_current_before_adjusted)
-# df_시총필터링_상위이십퍼센트_지주사제외_밸류순위_이익모멘텀.head(3)
-
-
-# df_시총필터링_상위이십퍼센트_지주사제외_밸류순위_이익모멘텀.to_csv('/content/drive/MyDrive/stock_kang/output/kang_sample.csv', encoding='cp949')
-
-# """5. 퀄리티 종합순위 산출"""
-# [x for x in df_시총필터링_상위이십퍼센트_지주사제외_밸류순위_이익모멘텀.columns if '자산' in x]
-# def 퀄리티_종합순위_산출(df):
-#   df2 = df.copy()
-#   """퀄리티 종합순위 산출"""
-  
-#   # GPA (내림차순)
-#   df2['과거GP/A_rank'] = df2['과거 GP/A (%)'].rank(ascending=False) 
-
-#   # 자산성장률(오름차순)
-#   df2['자산증가율 (최근분기)_rank'] = df2['자산증가율 (최근분기)'].rank(ascending=True) 
-
-#   # 영업이익/차입금 증가율(내림차순)
-#   df2['(영업이익/차입금) 증가율_rank'] = df2['(영업이익/차입금) 증가율'].rank(ascending=False)
-
-#   selected_cols = ['과거GP/A_rank','자산증가율 (최근분기)_rank','(영업이익/차입금) 증가율_rank']
-  
-#   # 퀄리티 종합순위 산출
-#   df2['퀄리티_종합순위'] = df2[selected_cols].mean(axis=1)
-
-#   return df2
-
-# df_시총필터링_상위이십퍼센트_지주사제외_밸류순위_이익모멘텀_퀄리티순위 = 퀄리티_종합순위_산출(df_시총필터링_상위이십퍼센트_지주사제외_밸류순위_이익모멘텀)
-# df_시총필터링_상위이십퍼센트_지주사제외_밸류순위_이익모멘텀_퀄리티순위.head()
 
 
 
