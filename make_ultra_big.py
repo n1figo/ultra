@@ -83,10 +83,20 @@ class make_ultra_big:
     df_밸류_이익모멘텀_퀄리티 = self.퀄리티_종합순위_산출(df_밸류_이익모멘텀)
 
     # df = df.set_index()
-    filename_output = os.path.join(self.OUTPUT_DIR, 'tmp.csv')
-    df_밸류_이익모멘텀_퀄리티.to_csv(filename_output, encoding='cp949')
-
+    
+    #####################################
     """4. 밸류 + 이익모멘텀 종합순위산출"""
+    #####################################
+    df_밸류_이익모멘텀_퀄리티['밸류_이익모멘텀_종합순위'] = df_밸류_이익모멘텀_퀄리티[['밸류종합순위','이익모멘텀_종합순위']].mean(axis=1)
+    
+    # 정렬
+    df_밸류_이익모멘텀_퀄리티 = df_밸류_이익모멘텀_퀄리티.sort_values(by='밸류_이익모멘텀_종합순위',ascending=True)
+    df_밸류_이익모멘텀_퀄리티.reset_index(inplace=True, drop=True)
+
+    filename_output = os.path.join(self.OUTPUT_DIR, '밸류_이익모멘텀.csv')
+    df_밸류_이익모멘텀_퀄리티.to_csv(filename_output, encoding='cp949')
+    
+
     """5. 대형주 울트라"""
     """6. 울트라"""
 
