@@ -131,9 +131,19 @@ class make_ultra_big:
     filename_output = os.path.join(self.OUTPUT_DIR, '밸류_이익모멘텀.csv')
     df_밸류_이익모멘텀_퀄리티.to_csv(filename_output, encoding='cp949')
     
-
+    #####################################
     """5. 대형주 울트라"""
+    #####################################
+    df_밸류_이익모멘텀_퀄리티['대형주_울트라_종합순위'] = df_밸류_이익모멘텀_퀄리티[['밸류종합순위','이익모멘텀_종합순위','퀄리티_종합순위']].mean(axis=1)
+    df_밸류_이익모멘텀_퀄리티.reset_index(inplace=True, drop=True)
+
+    filename_output = os.path.join(self.OUTPUT_DIR, '대형주울트라.csv')
+    df_밸류_이익모멘텀_퀄리티.to_csv(filename_output, encoding='cp949')
+
+    #####################################
     """6. 울트라"""
+    #####################################
+    
 
 
   
