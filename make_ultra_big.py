@@ -120,7 +120,62 @@ class make_ultra_big:
     # df = df.set_index()
     
     #####################################
-    """4. 밸류 + 이익모멘텀 종합순위산출"""
+    # """4. 밸류 + 이익모멘텀 종합순위산출"""
+    #####################################
+    # df_밸류_이익모멘텀_퀄리티['밸류_이익모멘텀_종합순위'] = df_밸류_이익모멘텀_퀄리티[['밸류종합순위','이익모멘텀_종합순위']].mean(axis=1)
+    
+    # 정렬
+    # df_밸류_이익모멘텀_퀄리티 = df_밸류_이익모멘텀_퀄리티.sort_values(by='밸류_이익모멘텀_종합순위',ascending=True)
+    # df_밸류_이익모멘텀_퀄리티.reset_index(inplace=True, drop=True)
+
+    # filename_output = os.path.join(self.OUTPUT_DIR, '밸류_이익모멘텀.csv')
+    # df_밸류_이익모멘텀_퀄리티.to_csv(filename_output, encoding='cp949')
+    
+    #####################################
+    """5. 대형주 울트라"""
+    #####################################
+    df_밸류_이익모멘텀_퀄리티['대형주_울트라_종합순위'] = df_밸류_이익모멘텀_퀄리티[['밸류종합순위','이익모멘텀_종합순위','퀄리티_종합순위']].mean(axis=1)
+    df_밸류_이익모멘텀_퀄리티 = df_밸류_이익모멘텀_퀄리티.sort_values(by='대형주_울트라_종합순위',ascending=True)
+    df_밸류_이익모멘텀_퀄리티.reset_index(inplace=True, drop=True)
+
+    filename_output = os.path.join(self.OUTPUT_DIR, '대형주울트라.csv')
+    df_밸류_이익모멘텀_퀄리티.to_csv(filename_output, encoding='cp949')
+
+    return df_밸류_이익모멘텀_퀄리티
+
+
+    
+  def run_ultra_normal(self):
+    #####################################
+    """6. 울트라_normal"""
+    #####################################
+    df = self.readfile()
+    # df_시총20프로 = self.시총20프로필터링(df)
+    df_지주스펙제외 = self.지주사스펙금융사제외(df)
+
+    """1. 밸류종합순위"""
+    df_밸류종합순위 = self.밸류종합순위(df_지주스펙제외)
+    df_밸류종합순위.reset_index(inplace=True, drop=True)
+
+    """2. 이익모멘텀종합순위"""
+    # """이번달이 몇분기인지 구하기"""
+    q = this_quarter.make_this_quarter_num()
+    this_y,this_q = q.make_this_q_num()
+    print(this_y,this_q)
+
+    selected_cols_yoy_qoq_current_before_adjusted = self.confirm_this_q_y(df_밸류종합순위, this_y, this_q)
+    print(selected_cols_yoy_qoq_current_before_adjusted) # 분석대상 분기/연
+
+    ### 이익모멘텀 종합순위산출
+    df_밸류_이익모멘텀 = self.make_earnings_momentum(df_밸류종합순위, selected_cols_yoy_qoq_current_before_adjusted)
+
+    """3. 퀄리티순위"""
+    df_밸류_이익모멘텀_퀄리티 = self.퀄리티_종합순위_산출(df_밸류_이익모멘텀)
+
+    # df = df.set_index()
+    
+    #####################################
+    """7. 밸류 + 이익모멘텀 종합순위산출"""
     #####################################
     df_밸류_이익모멘텀_퀄리티['밸류_이익모멘텀_종합순위'] = df_밸류_이익모멘텀_퀄리티[['밸류종합순위','이익모멘텀_종합순위']].mean(axis=1)
     
@@ -132,18 +187,18 @@ class make_ultra_big:
     df_밸류_이익모멘텀_퀄리티.to_csv(filename_output, encoding='cp949')
     
     #####################################
-    """5. 대형주 울트라"""
+    """8. 울트라_normal"""
     #####################################
-    df_밸류_이익모멘텀_퀄리티['대형주_울트라_종합순위'] = df_밸류_이익모멘텀_퀄리티[['밸류종합순위','이익모멘텀_종합순위','퀄리티_종합순위']].mean(axis=1)
+    df_밸류_이익모멘텀_퀄리티['울트라_normal_종합순위'] = df_밸류_이익모멘텀_퀄리티[['밸류종합순위','이익모멘텀_종합순위','퀄리티_종합순위']].mean(axis=1)
+
+    # 정렬
+    df_밸류_이익모멘텀_퀄리티 = df_밸류_이익모멘텀_퀄리티.sort_values(by='울트라_normal_종합순위',ascending=True)
     df_밸류_이익모멘텀_퀄리티.reset_index(inplace=True, drop=True)
 
-    filename_output = os.path.join(self.OUTPUT_DIR, '대형주울트라.csv')
+    filename_output = os.path.join(self.OUTPUT_DIR, '울트라_normal.csv')
     df_밸류_이익모멘텀_퀄리티.to_csv(filename_output, encoding='cp949')
 
-    #####################################
-    """6. 울트라"""
-    #####################################
-    
+    return df_밸류_이익모멘텀_퀄리티
 
 
   
@@ -313,7 +368,8 @@ class make_ultra_big:
 
 if __name__ == "__main__":
   ultra_big = make_ultra_big()
-  ultra_big.run_ultra_big()
+  df1 = ultra_big.run_ultra_big()
+  df2 = ultra_big.run_ultra_normal()
 
 
 
