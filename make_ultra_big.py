@@ -21,6 +21,25 @@
 # 7. Pysh
 # git push origin master
 
+
+
+# ##########
+# 기존 리포지토리 remote 제거
+# ##########
+# git remote remove origin
+# 새 리포지토리 remote 추가
+# git remote add origin https://github.com/계정/리포지토리
+
+
+# #################
+# 에러발생시..
+# error: failed to push some refs to 'https://github.com/n1figo/comm_score.git'
+# #################
+# git checkout -b 'master'
+# git push origin master
+
+
+
 # 깃허브 업데이트
 # 좌측 세번째 > 플러스 표시 클릭
 # 위쪽 체크표시 클릭 > 커밋메시지 입력 > 클라우드 표시 클릭
