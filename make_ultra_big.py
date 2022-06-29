@@ -130,18 +130,23 @@ class make_ultra_big:
 
     # filename_output = os.path.join(self.OUTPUT_DIR, '밸류_이익모멘텀.csv')
     # df_밸류_이익모멘텀_퀄리티.to_csv(filename_output, encoding='cp949')
+
+    # 신F-score
+    df_밸류_이익모멘텀_퀄리티_신Fscore = df_밸류_이익모멘텀_퀄리티.copy()
+    df_밸류_이익모멘텀_퀄리티_신Fscore = self.newFscore(df_밸류_이익모멘텀_퀄리티_신Fscore)
+    
     
     #####################################
     """5. 대형주 울트라"""
     #####################################
-    df_밸류_이익모멘텀_퀄리티['대형주_울트라_종합순위'] = df_밸류_이익모멘텀_퀄리티[['밸류종합순위','이익모멘텀_종합순위','퀄리티_종합순위']].mean(axis=1)
-    df_밸류_이익모멘텀_퀄리티 = df_밸류_이익모멘텀_퀄리티.sort_values(by='대형주_울트라_종합순위',ascending=True)
-    df_밸류_이익모멘텀_퀄리티.reset_index(inplace=True, drop=True)
+    df_밸류_이익모멘텀_퀄리티_신Fscore['대형주_울트라_종합순위'] = df_밸류_이익모멘텀_퀄리티_신Fscore[['밸류종합순위','이익모멘텀_종합순위','퀄리티_종합순위']].mean(axis=1)
+    df_밸류_이익모멘텀_퀄리티_신Fscore = df_밸류_이익모멘텀_퀄리티_신Fscore.sort_values(by='대형주_울트라_종합순위',ascending=True)
+    df_밸류_이익모멘텀_퀄리티_신Fscore.reset_index(inplace=True, drop=True)
 
     filename_output = os.path.join(self.OUTPUT_DIR, '대형주울트라.csv')
-    df_밸류_이익모멘텀_퀄리티.to_csv(filename_output, encoding='cp949')
+    df_밸류_이익모멘텀_퀄리티_신Fscore.to_csv(filename_output, encoding='cp949')
 
-    return df_밸류_이익모멘텀_퀄리티
+    return df_밸류_이익모멘텀_퀄리티_신Fscore
 
 
     
@@ -185,20 +190,24 @@ class make_ultra_big:
 
     filename_output = os.path.join(self.OUTPUT_DIR, '밸류_이익모멘텀.csv')
     df_밸류_이익모멘텀_퀄리티.to_csv(filename_output, encoding='cp949')
+
+    # 신F-score
+    df_밸류_이익모멘텀_퀄리티_신Fscore = df_밸류_이익모멘텀_퀄리티.copy()
+    df_밸류_이익모멘텀_퀄리티_신Fscore = self.newFscore(df_밸류_이익모멘텀_퀄리티_신Fscore)
     
     #####################################
     """8. 울트라_normal"""
     #####################################
-    df_밸류_이익모멘텀_퀄리티['울트라_normal_종합순위'] = df_밸류_이익모멘텀_퀄리티[['밸류종합순위','이익모멘텀_종합순위','퀄리티_종합순위']].mean(axis=1)
+    df_밸류_이익모멘텀_퀄리티_신Fscore['울트라_normal_종합순위'] = df_밸류_이익모멘텀_퀄리티_신Fscore[['밸류종합순위','이익모멘텀_종합순위','퀄리티_종합순위']].mean(axis=1)
 
     # 정렬
-    df_밸류_이익모멘텀_퀄리티 = df_밸류_이익모멘텀_퀄리티.sort_values(by='울트라_normal_종합순위',ascending=True)
-    df_밸류_이익모멘텀_퀄리티.reset_index(inplace=True, drop=True)
+    df_밸류_이익모멘텀_퀄리티_신Fscore = df_밸류_이익모멘텀_퀄리티_신Fscore.sort_values(by='울트라_normal_종합순위',ascending=True)
+    df_밸류_이익모멘텀_퀄리티_신Fscore.reset_index(inplace=True, drop=True)
 
     filename_output = os.path.join(self.OUTPUT_DIR, '울트라_normal.csv')
-    df_밸류_이익모멘텀_퀄리티.to_csv(filename_output, encoding='cp949')
+    df_밸류_이익모멘텀_퀄리티_신Fscore.to_csv(filename_output, encoding='cp949')
 
-    return df_밸류_이익모멘텀_퀄리티
+    return df_밸류_이익모멘텀_퀄리티_신Fscore
 
 
   
@@ -362,6 +371,14 @@ class make_ultra_big:
     # 퀄리티 종합순위 산출
     df2['퀄리티_종합순위'] = df2[selected_cols].mean(axis=1)
 
+    return df2
+
+  
+  def newFscore(self, df):
+    df2 = df.copy()
+    selected_cols = (df2['F스코어 지배주주순익>0 여부'] == 1) & (df2['F스코어 영업활동현금흐름>0 여부'] == 1) & (df2['F스코어 신주발행X 여부'] == 1)
+    df2 = df2.loc[selected_cols]
+    
     return df2
     
 
