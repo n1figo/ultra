@@ -1,7 +1,11 @@
 from pymongo import MongoClient, UpdateOne
+from getpass import getpass
+
+username = input("MongoDB 사용자 이름: ")
+password = getpass("MongoDB 패스워드: ")  # 패스워드 안전하게 입력받기
+MONGO_URI = f"mongodb://{username}:{password}@localhost:27017"
 
 # MongoDB 연결 정보
-MONGO_URI = "mongodb://admin:dnsehd10djr!@localhost:27017"  # 여기에 관리자 계정의 사용자 이름과 비밀번호를 입력하세요
 DATABASE_NAME = "your_database"  # 사용할 데이터베이스 이름
 COLLECTION_NAME = "your_collection"  # 인덱스를 생성할 컬렉션 이름
 
