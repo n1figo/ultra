@@ -13,6 +13,8 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 from webdriver_manager.chrome import ChromeDriverManager
+from pymongo import MongoClient
+from getpass import getpass
 
 
 
@@ -261,3 +263,37 @@ print(df.head())
 print(df_연결.head())
 # driver.quit()
 
+
+
+"""3. DB에 적재"""
+
+from pymongo import MongoClient
+import pandas as pd
+
+
+# MongoDB 연결
+username = input("MongoDB 사용자 이름: ")
+password = getpass("MongoDB 패스워드: ")  # 패스워드 안전하게 입력받기
+MONGO_URI = f"mongodb://{username}:{password}@localhost:27017"
+DATABASE_NAME = "stock_database"
+
+# 클라이언트 생성
+client = MongoClient(MONGO_URI)
+
+# 데이터베이스 선택
+db = client[DATABASE_NAME]
+
+individual_financials_df = df.copy()
+consolidated_financials_df = df_연결.copy()
+
+# 연결재무제표 컬렉션에 데이터 저장
+consolidated_collection = db['consolidated_financials']
+consolidated_collection.insert_many(consolidated_financials_df.to_dict('records'))
+
+# 개별재무제표 컬렉션에 데이터 저장
+individual_collection = db['individual_financials']
+individual_collection.insert_many(individual_financials_df.to_dict('records'))
+
+# 데이터 조회 및 출력 (예시: 연결재무제표)
+query_result = consolidated_collection.find_one({'회사명': 'AJ네트웍스'})
+print(query_result)
