@@ -36,53 +36,39 @@ print(consolidated_financials_df.head())
 print("\nIndividual Financials:")
 print(individual_financials_df.head())
 
+def cleaning_fin_data(df):
+    df2 = df.copy()
+
+    print(df2.columns.tolist())
+    print('재무제표 종류값을 출력합니다.')
+    print(df2['재무제표종류'].unique().tolist()[0].split(',')[0])
+    fs_type_data = df2['재무제표종류'].unique().tolist()[0].split(',')[0]
+
+    # 재무제표 유형 구분
+    fs_type = ''
+    if fs_type_data == '재무상태표':
+        fs_type = 'bs'
+    elif fs_type_data == '손익계산서':
+        fs_type = 'is'
+    elif fs_type_data == '현금흐름표':
+        fs_type = 'cf'
+
+    print('재무제표 유형을 출력합니다.')
+    print(fs_type)
+
+    return df2
 
 
+print('재무제표 전처리를 시작합니다.')
+# 전처리 실행 (현금흐름표, 연결)
 
-
-# # 재무 데이터가 저장된 데이터베이스와 컬렉션 선택
-# financial_db = client['financial_database']
-# financial_collection = financial_db['financial_data']
-
-# # 데이터 전체 조회
-# cursor = financial_collection.find()
-
-# # 조회한 데이터를 리스트로 변환 후, Pandas 데이터프레임으로 만들기
-# financial_data_frame = pd.DataFrame(list(cursor))
-
-# # 결과 확인 (옵션)
-# print(financial_data_frame.head())
-
-
-
-# individual_financials_df = df.copy()
-# consolidated_financials_df = df_연결.copy()
-
-# # 연결재무제표 컬렉션에 데이터 저장
-# consolidated_collection = db['consolidated_financials']
-# consolidated_collection.insert_many(consolidated_financials_df.to_dict('records'))
-
-# # 개별재무제표 컬렉션에 데이터 저장
-# individual_collection = db['individual_financials']
-# individual_collection.insert_many(individual_financials_df.to_dict('records'))
-
-# # 데이터 조회 및 출력 (예시: 연결재무제표)
-# query_result = consolidated_collection.find_one({'회사명': 'AJ네트웍스'})
-# print(query_result)
-
+consolidated_financials_df_cleaned = cleaning_fin_data(consolidated_financials_df)
 
 
 
 ################################################################################################
 """
 
-# 다운로드한 재무제표 파일 읽어오기
-# BASE_DIR, filename을 적절히 수정하세요.
-BASE_DIR = 'D:\\dev\\quantylab\\data\\dart'
-
-filename = '2021_사업보고서_04_현금흐름표_연결_20220401.txt'
-df = pd.read_csv(os.path.join(BASE_DIR, filename), sep='\t', encoding='cp949')
-df
 
 # 재무제표 유형 구분
 fs_type = ''
@@ -92,7 +78,6 @@ elif '손익계산서' in filename:
     fs_type = 'is'
 elif '현금흐름표' in filename:
     fs_type = 'cf'
-
 
 
 
