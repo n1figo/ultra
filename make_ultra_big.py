@@ -240,14 +240,15 @@ class make_ultra_big:
     print(input_filename)
     input_filename_folder = os.path.join(self.INPUT_DIR, input_filename)
     # print(input_filename_folder)
-    df = pd.read_csv(input_filename_folder, encoding='utf-8')
+    # df = pd.read_csv(input_filename_folder, encoding='utf-8')
+    df = pd.read_excel(input_filename_folder, header=1)
     # print(df.head(1))
 
     return df
 
   def 시총20프로필터링(self, df):
     df_시총필터링 = df.copy()
-    df_시총필터링 = df_시총필터링.sort_values(by = '시가총액 (억)', ascending=False) # 내림차순 정렬
+    df_시총필터링 = df_시총필터링.sort_values(by = '시가총액(억)', ascending=False) # 내림차순 정렬
     시총상위이십행 = int(df_시총필터링.shape[0]*0.2)
     시총상위이십행    
     df_시총필터링_상위이십퍼센트 = df_시총필터링.copy()
@@ -384,12 +385,12 @@ class make_ultra_big:
     df2['GP/A_rank'] = df2['GP/A (%)'].rank(ascending=False) 
 
     # 자산성장률(오름차순)
-    df2['자산증가율 (최근분기)_rank'] = df2['자산증가율 (최근분기)'].rank(ascending=True) 
+    df2['자산증가율_rank'] = df2['자산 증가율 (%)'].rank(ascending=True) 
 
     # 영업이익/차입금 증가율(내림차순)
-    df2['(영업이익/차입금) 증가율_rank'] = df2['(영업이익/차입금) 증가율'].rank(ascending=False)
+    df2['(영업이익/차입금) 증가율_rank'] = df2['(영업이익/차입금) 증가율 (%)'].rank(ascending=False)
 
-    selected_cols = ['과거GP/A_rank','자산증가율 (최근분기)_rank','(영업이익/차입금) 증가율_rank']
+    selected_cols = ['GP/A_rank','자산증가율_rank','(영업이익/차입금) 증가율_rank']
     
     # 퀄리티 종합순위 산출
     df2['퀄리티_종합순위'] = df2[selected_cols].mean(axis=1)
