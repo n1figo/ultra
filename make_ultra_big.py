@@ -78,6 +78,8 @@
 # 클래스 가져오기 참고
 # https://m.blog.naver.com/PostView.naver?isHttpsRedirect=true&blogId=monkey5255&logNo=220615974167
 
+# 엉드루 기준 테스트
+
 
 
 # from builtins import EncodingWarning
@@ -126,6 +128,17 @@ class make_ultra_big:
 
     """3. 퀄리티순위"""
     df_밸류_이익모멘텀_퀄리티 = self.퀄리티_종합순위_산출(df_밸류_이익모멘텀)
+
+    # 순위 부여
+    df_밸류_이익모멘텀_퀄리티['ROA_Rank'] = df_밸류_이익모멘텀_퀄리티['분기 ROA (%)'].rank(ascending=False)  # ROA가 높은 순서대로 순위
+    df_밸류_이익모멘텀_퀄리티['PFCR_Rank'] = df_밸류_이익모멘텀_퀄리티['PFCR'].rank(ascending=True)  # PFCR이 낮은 순서대로 순위
+    df_밸류_이익모멘텀_퀄리티['PBR_Rank'] = df_밸류_이익모멘텀_퀄리티['PBR'].rank(ascending=True)  # PBR이 낮은 순서대로 순위
+
+    # 종합 점수 계산
+    df_밸류_이익모멘텀_퀄리티['Total_Score'] = df_밸류_이익모멘텀_퀄리티['ROA_Rank'] + df_밸류_이익모멘텀_퀄리티['PFCR_Rank'] + df_밸류_이익모멘텀_퀄리티['PBR_Rank']
+
+    # 종합 점수가 낮은 순서대로 정렬
+    df_밸류_이익모멘텀_퀄리티 = df_밸류_이익모멘텀_퀄리티.sort_values(by='Total_Score')
 
     # df = df.set_index()
     
@@ -226,15 +239,18 @@ class make_ultra_big:
     input_filename = [x for x in input_filename if '퀀트' in x][0]
     # print(input_filename)
     input_filename_folder = os.path.join(self.INPUT_DIR, input_filename)
-    # print(input_filename_folder)
-    df = pd.read_csv(input_filename_folder, encoding='utf-8')
+    print(input_filename_folder)
+    # df = pd.read_csv(input_filename_folder, encoding='cp949')
+    df = pd.read_excel(input_filename_folder, header=1)
+    # df = pd.read_csv(input_filename_folder)
     # print(df.head(1))
 
     return df
 
   def 시총20프로필터링(self, df):
     df_시총필터링 = df.copy()
-    df_시총필터링 = df_시총필터링.sort_values(by = '시가총액 (억)', ascending=False) # 내림차순 정렬
+    print(df.columns)
+    df_시총필터링 = df_시총필터링.sort_values(by = '시가총액(억)', ascending=False) # 내림차순 정렬
     시총상위이십행 = int(df_시총필터링.shape[0]*0.2)
     시총상위이십행    
     df_시총필터링_상위이십퍼센트 = df_시총필터링.copy()
@@ -250,13 +266,13 @@ class make_ultra_big:
     df_시총필터링_상위이십퍼센트_지주사제외 = df.copy()
     df_시총필터링_상위이십퍼센트_지주사제외
     # 지주사 아닌 것들만 필터링
-    df_시총필터링_상위이십퍼센트_지주사제외 = df_시총필터링_상위이십퍼센트_지주사제외.loc[df_시총필터링_상위이십퍼센트_지주사제외['업종 (대)'] != '지주사', :]
+    df_시총필터링_상위이십퍼센트_지주사제외 = df_시총필터링_상위이십퍼센트_지주사제외.loc[df_시총필터링_상위이십퍼센트_지주사제외['업종대'] != '지주사', :]
     # print(df.shape)
     # print(df_시총필터링_상위이십퍼센트_지주사제외.shape) # (436, 273)
     # print(df_시총필터링_상위이십퍼센트_지주사제외['업종 (대)'].value_counts())
 
     # 금융업종 제외
-    df_시총필터링_상위이십퍼센트_지주사금융사제외 = df_시총필터링_상위이십퍼센트_지주사제외.loc[df_시총필터링_상위이십퍼센트_지주사제외['업종 (대)'] != '금융', :]
+    df_시총필터링_상위이십퍼센트_지주사금융사제외 = df_시총필터링_상위이십퍼센트_지주사제외.loc[df_시총필터링_상위이십퍼센트_지주사제외['업종대'] != '금융', :]
     # print(df_시총필터링_상위이십퍼센트_지주사금융사제외.shape) # (409, 273)
     # print(df_시총필터링_상위이십퍼센트_지주사금융사제외['업종 (대)'].value_counts())
 
@@ -283,13 +299,13 @@ class make_ultra_big:
 
   def make_value_rank(self, df):
     df2 = df.copy()
-    df2 = self.make_descending_value_rank(df2,'발표 분기 PER')
+    df2 = self.make_descending_value_rank(df2,'분기 PER')
     df3 = self.make_descending_value_rank(df2,'분기 PFCR')
-    df4 = self.make_descending_value_rank(df3, '발표 PBR')
-    df5 = self.make_descending_value_rank(df4, '발표 분기 PSR')
+    df4 = self.make_descending_value_rank(df3, 'PBR')
+    df5 = self.make_descending_value_rank(df4, '분기 PSR')
     df6 = df5.copy()
 
-    df6['밸류종합순위'] = df6[['발표 분기 PER_rank','분기 PFCR_rank','발표 PBR_rank','발표 분기 PSR_rank']].mean(axis=1)
+    df6['밸류종합순위'] = df6[['분기 PER_rank','분기 PFCR_rank','PBR_rank','분기 PSR_rank']].mean(axis=1)
 
     return df6
 
@@ -368,15 +384,15 @@ class make_ultra_big:
     """퀄리티 종합순위 산출"""
     
     # GPA (내림차순)
-    df2['과거GP/A_rank'] = df2['과거 GP/A (%)'].rank(ascending=False) 
+    df2['GP/A_rank'] = df2['GP/A (%)'].rank(ascending=False) 
 
     # 자산성장률(오름차순)
-    df2['자산증가율 (최근분기)_rank'] = df2['자산증가율 (최근분기)'].rank(ascending=True) 
+    df2['자산증가율_rank'] = df2['자산 증가율 (%)'].rank(ascending=True) 
 
     # 영업이익/차입금 증가율(내림차순)
-    df2['(영업이익/차입금) 증가율_rank'] = df2['(영업이익/차입금) 증가율'].rank(ascending=False)
+    df2['(영업이익/차입금) 증가율_rank'] = df2['(영업이익/차입금) 증가율 (%)'].rank(ascending=False)
 
-    selected_cols = ['과거GP/A_rank','자산증가율 (최근분기)_rank','(영업이익/차입금) 증가율_rank']
+    selected_cols = ['GP/A_rank','자산증가율_rank','(영업이익/차입금) 증가율_rank']
     
     # 퀄리티 종합순위 산출
     df2['퀄리티_종합순위'] = df2[selected_cols].mean(axis=1)
@@ -386,7 +402,7 @@ class make_ultra_big:
   
   def newFscore(self, df):
     df2 = df.copy()
-    selected_cols = (df2['F스코어 지배주주순익>0 여부'] == 1) & (df2['F스코어 영업활동현금흐름>0 여부'] == 1) & (df2['F스코어 신주발행X 여부'] == 1)
+    selected_cols = (df2['F스코어 순이익>0 여부'] == 1) & (df2['F스코어 영업활동현금>0 여부'] == 1) & (df2['F스코어 신주발행X 여부'] == 1)
     df2 = df2.loc[selected_cols]
     
     return df2
