@@ -341,9 +341,10 @@ class make_ultra_big:
 
     # 분석대상 분기 및 연도 확정
     analysis_year_quarter = str(int(analysis_y))[2:] + '년' + str(analysis_q) + 'Q'
+    print("analysis_year_quarter: ", analysis_year_quarter)
 
     selected_cols_yoy_qoq_current_before = [cols for cols in selected_cols_yoy_qoq if analysis_year_quarter in cols]
-    print(selected_cols_yoy_qoq_current_before) # 값 없음
+    print("selected_cols_yoy_qoq_current_before:", selected_cols_yoy_qoq_current_before) # 값 없음
     if '(E)' in selected_cols_yoy_qoq_current_before[0] :
         selected_cols_yoy_qoq_current_before = str(int(this_y))[2:] + '년' + str(this_q-1) + 'Q'
     print('분석대상 연도및분기: ', selected_cols_yoy_qoq_current_before) # 확정현재연도및분기:  22년2Q
