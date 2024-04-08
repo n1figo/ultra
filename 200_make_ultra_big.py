@@ -91,7 +91,7 @@ import matplotlib.pyplot as plt
 import os 
 import encodings.idna
 import this_quarter
-
+import datetime
 
 class make_ultra_big:
   def __init__(self) :
@@ -166,7 +166,12 @@ class make_ultra_big:
     df_밸류_이익모멘텀_퀄리티_신Fscore = df_밸류_이익모멘텀_퀄리티_신Fscore.sort_values(by='대형주_울트라_종합순위',ascending=True)
     df_밸류_이익모멘텀_퀄리티_신Fscore.reset_index(inplace=True, drop=True)
 
-    filename_output = os.path.join(self.OUTPUT_DIR, '대형주울트라.csv')
+    today = datetime.date.today().strftime('%Y%m%d')
+
+    filename_output = os.path.join(self.OUTPUT_DIR, f'{today}_대형주울트라.csv')
+    df_밸류_이익모멘텀_퀄리티_신Fscore.to_csv(filename_output, encoding='cp949')
+
+    filename_output = os.path.join(self.OUTPUT_DIR, f'{today}_울트라_normal.csv')
     df_밸류_이익모멘텀_퀄리티_신Fscore.to_csv(filename_output, encoding='cp949')
 
     return df_밸류_이익모멘텀_퀄리티_신Fscore
@@ -211,7 +216,9 @@ class make_ultra_big:
     df_밸류_이익모멘텀_퀄리티 = df_밸류_이익모멘텀_퀄리티.sort_values(by='밸류_이익모멘텀_종합순위',ascending=True)
     df_밸류_이익모멘텀_퀄리티.reset_index(inplace=True, drop=True)
 
-    filename_output = os.path.join(self.OUTPUT_DIR, '밸류_이익모멘텀.csv')
+    today = datetime.date.today().strftime('%Y%m%d')
+
+    filename_output = os.path.join(self.OUTPUT_DIR, f'{today}_밸류_이익모멘텀.csv')
     df_밸류_이익모멘텀_퀄리티.to_csv(filename_output, encoding='cp949')
 
     # 신F-score
