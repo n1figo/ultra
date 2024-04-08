@@ -324,7 +324,7 @@ class make_ultra_big:
     df2 = df.copy()
     selected_cols = [cols for cols in df2.columns.tolist() if ('영업이익' in cols) or ('순이익' in cols)]
     selected_cols_yoy_qoq = [cols for cols in selected_cols if ('YOY' in cols) or ('QOQ' in cols)]
-    print(selected_cols_yoy_qoq)
+    print("selected_cols_yoy_qoq: ", selected_cols_yoy_qoq)
     current_year_quarter = str(int(this_y))[2:] + '년' + str(this_q) + 'Q'
     print('현재연도및분기: ', current_year_quarter)  # 현재연도및분기:  22년2Q
 
