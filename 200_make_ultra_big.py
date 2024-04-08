@@ -320,48 +320,33 @@ class make_ultra_big:
   """4. 이익모멘텀 종합순위 산출"""
   ### 전분기 대비 영업이익 증가율, 전년 동기 대비 영업이익 증가율, 전 분기 대비 순이익 증가율, 전년 동기 대비 순이익 증가율
   ### 이전분기까지 yoy qoq 산출
-  def confirm_this_q_y(self, df, this_y,this_q):
+  def confirm_this_q_y(self, df, this_y, this_q):
     df2 = df.copy()
     selected_cols = [cols for cols in df2.columns.tolist() if ('영업이익' in cols) or ('순이익' in cols)]
     selected_cols_yoy_qoq = [cols for cols in selected_cols if ('YOY' in cols) or ('QOQ' in cols)]
-    ################################################################################3
-    print("*"*50)
-    print("selected_cols_yoy_qoq: ", selected_cols_yoy_qoq)
-    print("*"*50)
-    ################################################################################3
-    current_year_quarter = str(int(this_y))[2:] + '년' + str(this_q) + 'Q'
-    print('현재연도및분기: ', current_year_quarter)  # 현재연도및분기:  22년2Q
-
-    # 분석대상연도 및 분기
-    analysis_q = this_q - 1
-    # 분석대상분기가 0이면 전년도 4Q 로 환산
-    if analysis_q == 0:
-      analysis_y = this_y - 1 
-      analysis_q = 4
-
-    else:
-      # 분석대상분기가 0이 아닐 경우 : 1분기만 뺀다.
-      analysis_y = this_y 
-
-    # 분석대상 분기 및 연도 확정
-    analysis_year_quarter = str(int(analysis_y))[2:] + '년' + str(analysis_q) + 'Q'
-    print("analysis_year_quarter: ", analysis_year_quarter)
-
-    selected_cols_yoy_qoq_current_before = [cols for cols in selected_cols_yoy_qoq if analysis_year_quarter in cols]
-    print("selected_cols_yoy_qoq_current_before:", selected_cols_yoy_qoq_current_before) # 값 없음
-
-    if '(E)' in selected_cols_yoy_qoq_current_before[0] :
-        selected_cols_yoy_qoq_current_before = str(int(this_y))[2:] + '년' + str(this_q-1) + 'Q'
-
-    else:
-        
-    print('분석대상 연도및분기: ', selected_cols_yoy_qoq_current_before) # 확정현재연도및분기:  22년2Q
-
-    """조정된 분기로 yoy qoq 산출"""
-    selected_cols_yoy_qoq_current_before_adjusted = [cols for cols in selected_cols_yoy_qoq if selected_cols_yoy_qoq_current_before in cols]
-    print('분석대상 분기데이터:' , selected_cols_yoy_qoq_current_before_adjusted) # ['영업이익 22년1Q(E) YOY', '영업이익 22년1Q(E) QOQ', '순이익 22년1Q(E) YOY', '순이익 22년1Q(E) QOQ']
     
-    return selected_cols_yoy_qoq_current_before_adjusted
+    analysis_y = this_y
+    analysis_q = this_q - 1
+
+    if analysis_q == 0:
+        analysis_y -= 1
+        analysis_q = 4
+
+    analysis_year_quarter = f"{str(int(analysis_y))[2:]}년{analysis_q}Q"
+    selected_cols_yoy_qoq_current_before = [cols for cols in selected_cols_yoy_qoq if analysis_year_quarter in cols]
+
+    # 데이터가 조회되지 않는 경우, 이전 분기로 넘어감
+    while not selected_cols_yoy_qoq_current_before:
+        if analysis_q == 1:
+            analysis_y -= 1
+            analysis_q = 4
+        else:
+            analysis_q -= 1
+        analysis_year_quarter = f"{str(int(analysis_y))[2:]}년{analysis_q}Q"
+        selected_cols_yoy_qoq_current_before = [cols for cols in selected_cols_yoy_qoq if analysis_year_quarter in cols]
+        
+    return selected_cols_yoy_qoq_current_before
+
 
   
   """4. 이익모멘텀 종합순위 산출"""
