@@ -121,7 +121,7 @@ class make_ultra_big:
     print(this_y,this_q)
 
     selected_cols_yoy_qoq_current_before_adjusted = self.confirm_this_q_y(df_밸류종합순위, this_y, this_q)
-    print(selected_cols_yoy_qoq_current_before_adjusted) # 분석대상 분기/연
+    print("selected_cols_yoy_qoq_current_before_adjusted : ", selected_cols_yoy_qoq_current_before_adjusted) # 분석대상 분기/연
 
     ### 이익모멘텀 종합순위산출
     df_밸류_이익모멘텀 = self.make_earnings_momentum(df_밸류종합순위, selected_cols_yoy_qoq_current_before_adjusted)
