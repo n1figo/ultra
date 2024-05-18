@@ -5,6 +5,7 @@ import os
 
 # 환경 변수에서 API 키 가져오기
 api_key = os.getenv('API_KEY')
+api_key = '647ca5d9c52a0d3b63b636760f1c5cdcf97ebfe1'
 
 # DART에 요청을 보내 데이터 가져오기
 def get_company_data():
@@ -12,6 +13,7 @@ def get_company_data():
     response = requests.get(url)
     if response.status_code == 200:
         data = response.json()
+        print(data)
         return pd.DataFrame(data['list'])
     else:
         st.error(f"API 요청에 실패했습니다: {response.status_code}, {response.text}")
