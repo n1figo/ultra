@@ -20,23 +20,23 @@ filtered_data = filtered_data.dropna(subset=['분기 ROA (%)'])
 
 # Ensure necessary columns are numeric and handle non-numeric issues
 filtered_data['ROIC (%)'] = pd.to_numeric(filtered_data['ROIC (%)'], errors='coerce')
-filtered_data['분기ROE(%)'] = pd.to_numeric(filtered_data['분기ROE(%)'], errors='coerce')
+filtered_data['분기 ROE (%)'] = pd.to_numeric(filtered_data['분기 ROE (%)'], errors='coerce')
 filtered_data['PBR'] = pd.to_numeric(filtered_data['PBR'], errors='coerce')
 
 # Filter data based on the new conditions
 filtered_data = filtered_data[
     (filtered_data['ROIC (%)'] >= 15) &
     (filtered_data['F스코어 총자산회전율증가 여부'] == 1)
-].dropna(subset=['ROIC (%)', '분기ROE(%)', 'PBR', 'Industry'])
+].dropna(subset=['ROIC (%)', '분기 ROE (%)', 'PBR', '업종소'])
 
 # Calculate the 5-year expected compound annual growth rate (CAGR)
-filtered_data['5년 예상연복리수익률'] = ((1 + filtered_data['분기ROE(%)'] / 100) ** 5 / filtered_data['PBR']) ** 0.2 - 1
+filtered_data['5년 예상연복리수익률'] = ((1 + filtered_data['분기 ROE (%)'] / 100) ** 5 / filtered_data['PBR']) ** 0.2 - 1
 
 # Sort by PBR in descending order and then by the calculated CAGR
 sorted_data = filtered_data.sort_values(by=['PBR', '5년 예상연복리수익률'], ascending=[False, True])
 
 # Display the results
-print(sorted_data[['Industry', 'ROIC (%)', '분기ROE(%)', 'PBR', '5년 예상연복리수익률']])
+print(sorted_data[['업종소', 'ROIC (%)', '분기 ROE (%)', 'PBR', '5년 예상연복리수익률']])
 
 # Group by 'Industry' and select the top two companies based on 'ROE'
 top_companies_by_industry = filtered_data.groupby('업종소').apply(lambda x: x.nlargest(2, '분기 ROA (%)')).reset_index(drop=True)
