@@ -47,6 +47,7 @@ print(top_companies_by_industry)
 top_companies_by_industry.to_csv('/workspaces/ultra/output/업종상위ROAtop2.csv', encoding='cp949')
 print('추출작업완료!')
 
+print('분기PFCR 0이상 20이하, 복리수익률 내림차순정렬, 총자산회전율 1이상 & 전년비 20% 이상회전율증가')
 
 # import streamlit as st
 # import requests
