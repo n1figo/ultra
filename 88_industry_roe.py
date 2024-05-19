@@ -6,6 +6,9 @@ input_filename_folder = os.path.join('/workspaces/ultra/input/240517134606_퀀�
 data = pd.read_excel(input_filename_folder, header=1)
 # print(data.head())
 
+# 데이터채우기
+data['업종소'] = data['업종소'].fillna(data['업종대'])
+
 # Verify and filter data to ensure there are no missing values in 'Industry' and 'ROE' columns
 filtered_data = data.dropna(subset=['업종소', 'ROA (%)'])
 
